@@ -46,7 +46,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
     }
     static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
     {
-        bool[] Posecen = new bool[broj_Rutera + 1]; // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+        bool[] Posecen = new bool[broj_Rutera];     
         return Korak_04_DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
     }
     static bool Korak_04_DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
