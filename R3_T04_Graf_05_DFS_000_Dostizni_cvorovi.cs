@@ -1,5 +1,7 @@
 // R3 T04 Graf 05 Obilazak: DFS: Usmereni graf:
 // https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/dostizni_cvorovi
+// https://app.diagrams.net/?title=R3_T04_Graf_05_Obilazak_DFS.drawio&lightbox=1&page-id=OvW9At-KTonu65IJHdt-&client=1
+// https://app.diagrams.net/#Hdraganilicnis%2FR3_T04_Graf_05_Obilazak_DFS%2Fmain%2FR3_T04_Graf_05_Obilazak_DFS.drawio#%7B%22pageId%22%3A%22OvW9At-KTonu65IJHdt-%22%7D
 
 using System;
 using System.Collections.Generic;
@@ -9,8 +11,8 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
     static void Main()
     {
         int broj_Rutera = int.Parse(Console.ReadLine());
-        List<int>[] Veze = new List<int>[broj_Rutera];
-        for (int i = 0; i < broj_Rutera; i++) Veze[i] = new List<int>();
+        List<int>[] Veze = new List<int>[broj_Rutera + 1];  // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+        for (int i = 0; i < broj_Rutera + 1; i++) Veze[i] = new List<int>();
 
         int broj_Veza = int.Parse(Console.ReadLine());
         for (int i = 0; i < broj_Veza; i++)
@@ -18,7 +20,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             string[] s = Console.ReadLine().Split();
             int Ruter_OD = int.Parse(s[0]);
             int Ruter_DO = int.Parse(s[1]);
-            Ruter_OD--; Ruter_DO--;         // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+            // Ruter_OD--; Ruter_DO--;         // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
             Veze[Ruter_OD].Add(Ruter_DO);
         }
 
@@ -28,13 +30,13 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             string[] s = Console.ReadLine().Split();
             int Ruter_Start = int.Parse(s[0]);
             int Ruter_Cilj = int.Parse(s[1]);
-            Ruter_Start--; Ruter_Cilj--;    // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+            // Ruter_Start--; Ruter_Cilj--;    // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
             Console.WriteLine((Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze)) ? "da" : "ne");
         }
     }
     static bool Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
     {
-        bool[] Posecen = new bool[broj_Rutera];
+        bool[] Posecen = new bool[broj_Rutera + 1]; // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
         return DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
     }
     static bool DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
