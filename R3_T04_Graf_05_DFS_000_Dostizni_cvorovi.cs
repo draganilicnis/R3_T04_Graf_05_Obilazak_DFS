@@ -29,10 +29,10 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             int Ruter_Start = int.Parse(s[0]);
             int Ruter_Cilj = int.Parse(s[1]);
             Ruter_Start--; Ruter_Cilj--;    // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-            Console.WriteLine((Da_li_su_ruteri_R1_i_R2_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze)) ? "da" : "ne");
+            Console.WriteLine((Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze)) ? "da" : "ne");
         }
     }
-    static bool Da_li_su_ruteri_R1_i_R2_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
+    static bool Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
     {
         bool[] Posecen = new bool[broj_Rutera];
         return DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
