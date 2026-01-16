@@ -10,10 +10,10 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
 {
     static void Main()
     {
-        List<int>[] Veze = Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj();   // Korak 1: ULAZ: Ucitavanje Grafa
-        Graf_Obrada_Test_Primera(Veze);                                  // Korak 2: ULAZ: Ucitavanje test primera
+        List<int>[] Veze = Korak_01_Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj();  // Korak 1: ULAZ: Ucitavanje Grafa
+        Korak_02_Graf_Obrada_Test_Primera(Veze);                            // Korak 2: ULAZ: Ucitavanje test primera
     }
-    static List<int>[] Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj()
+    static List<int>[] Korak_01_Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj()
     {
         int broj_Rutera = int.Parse(Console.ReadLine());
         List<int>[] Veze = new List<int>[broj_Rutera + 1];  // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
@@ -30,7 +30,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
         }
         return Veze;
     }
-    static void Graf_Obrada_Test_Primera(List<int>[] Veze)
+    static void Korak_02_Graf_Obrada_Test_Primera(List<int>[] Veze)
     {
         int broj_Rutera = Veze.Length;
         int broj_Parova = int.Parse(Console.ReadLine());
@@ -40,22 +40,22 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             int Ruter_Start = int.Parse(s[0]);
             int Ruter_Cilj = int.Parse(s[1]);
             // Ruter_Start--; Ruter_Cilj--;    // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze);
+            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze);
             Console.WriteLine((bDa_li_su_povezani_Ruteri_R1_i_R2) ? "da" : "ne");
         }
     }
-    static bool Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
+    static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
     {
         bool[] Posecen = new bool[broj_Rutera + 1]; // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-        return DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
+        return Korak_04_DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
     }
-    static bool DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
+    static bool Korak_04_DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
     {
         if (Ruter_OD == Ruter_DO) return true;                  // Stigli smo do ciljnog rutera
         if (Posecen[Ruter_OD]) return false;                    // Ako je tekuci ruter vec ranije bio posecen
         Posecen[Ruter_OD] = true;                               // Oznaci da je tekuci ruter posecen
         foreach (int Ruter_Susedni in Veze[Ruter_OD])           // Za svaki susedni ruter tekuceg rutera rekurzivni poziv 
-            if (DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) return true;
+            if (Korak_04_DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) return true;
         return false;
     }
 }
