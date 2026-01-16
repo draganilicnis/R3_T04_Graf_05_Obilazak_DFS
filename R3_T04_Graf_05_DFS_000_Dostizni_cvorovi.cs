@@ -10,6 +10,11 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
 {
     static void Main()
     {
+        List<int>[] Veze = Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj();   // Korak 1: ULAZ: Ucitavanje Grafa
+        Graf_Obrada_Test_Primera(Veze);                                  // Korak 2: ULAZ: Ucitavanje test primera
+    }
+    static List<int>[] Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj()
+    {
         int broj_Rutera = int.Parse(Console.ReadLine());
         List<int>[] Veze = new List<int>[broj_Rutera + 1];  // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
         for (int i = 0; i < broj_Rutera + 1; i++) Veze[i] = new List<int>();
@@ -23,7 +28,11 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             // Ruter_OD--; Ruter_DO--;         // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
             Veze[Ruter_OD].Add(Ruter_DO);
         }
-
+        return Veze;
+    }
+    static void Graf_Obrada_Test_Primera(List<int>[] Veze)
+    {
+        int broj_Rutera = Veze.Length;
         int broj_Parova = int.Parse(Console.ReadLine());
         for (int i = 0; i < broj_Parova; i++)
         {
@@ -31,7 +40,8 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             int Ruter_Start = int.Parse(s[0]);
             int Ruter_Cilj = int.Parse(s[1]);
             // Ruter_Start--; Ruter_Cilj--;    // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-            Console.WriteLine((Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze)) ? "da" : "ne");
+            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze);
+            Console.WriteLine((bDa_li_su_povezani_Ruteri_R1_i_R2) ? "da" : "ne");
         }
     }
     static bool Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
