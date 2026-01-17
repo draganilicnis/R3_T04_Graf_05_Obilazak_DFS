@@ -13,7 +13,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
         while (susedni_id < broj_susednih && !bPovezani)        // Za svaki susedni ruter tekuceg rutera rekurzivni poziv 
         {
             int Ruter_Susedni = Veze[Ruter_OD][susedni_id];
-            if (DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) bPovezani = true; //return true;
+            bPovezani = DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze); // bPovezani = true; //return true;
             susedni_id++;
         }
         return bPovezani;   // false;
