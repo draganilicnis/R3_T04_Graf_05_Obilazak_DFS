@@ -2,6 +2,24 @@ using System;
 using System.Collections.Generic;
 class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
 {
+    static bool DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
+    {
+        if (Ruter_OD == Ruter_DO) return true;                  // Stigli smo do ciljnog rutera
+        if (Posecen[Ruter_OD]) return false;                    // Ako je tekuci ruter vec ranije bio posecen
+        Posecen[Ruter_OD] = true;                               // Oznaci da je tekuci ruter posecen
+        int broj_susednih = Veze[Ruter_OD].Count;               // Broj susednih cvorova cvoru Ruter_OD
+        for (int susedni_id = 0; susedni_id < broj_susednih; susedni_id++)  // Za svaki susedni ruter tekuceg
+        {
+            int Ruter_Susedni = Veze[Ruter_OD][susedni_id];
+            if (DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) return true;
+        }
+        return false;
+    }
+    static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
+    {
+        bool[] Posecen = new bool[broj_Rutera];
+        return DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
+    }
     static void Main()
     {
         List<int>[] Veze = Korak_01_Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj();  // Korak 1: ULAZ: Ucitavanje Grafa
@@ -35,20 +53,6 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze);
             Console.WriteLine((bDa_li_su_povezani_Ruteri_R1_i_R2) ? "da" : "ne");
         }
-    }
-    static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
-    {
-        bool[] Posecen = new bool[broj_Rutera];     
-        return Korak_04_DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
-    }
-    static bool Korak_04_DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
-    {
-        if (Ruter_OD == Ruter_DO) return true;                  // Stigli smo do ciljnog rutera
-        if (Posecen[Ruter_OD]) return false;                    // Ako je tekuci ruter vec ranije bio posecen
-        Posecen[Ruter_OD] = true;                               // Oznaci da je tekuci ruter posecen
-        foreach (int Ruter_Susedni in Veze[Ruter_OD])           // Za svaki susedni ruter tekuceg rutera rekurzivni poziv 
-            if (Korak_04_DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) return true;
-        return false;
     }
 }
 
