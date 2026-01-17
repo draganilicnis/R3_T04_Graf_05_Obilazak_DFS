@@ -4,10 +4,9 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
 {
     static bool DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
     {
-        bool bPovezani = false;                         // 0. Da li su povezani Ruter_OD i Ruter_DO : inicijalno (pre petlje) nisu
-        if (Ruter_OD == Ruter_DO) bPovezani = true;     // 1. Stigli smo do ciljnog rutera
-        else if(Posecen[Ruter_OD]) bPovezani = false;   // 2. Ako je tekuci ruter vec ranije bio posecen
-        else 
+        bool bPovezani = false;                     // 0. Da li su povezani Ruter_OD i Ruter_DO: Inicijalno nisu
+        if (Ruter_OD == Ruter_DO) bPovezani = true; // 1. Stigli smo do ciljnog rutera
+        if (!bPovezani && !Posecen[Ruter_OD])       // 2. Ako je tekuci ruter nije posecen (i jos uvek nisu povezani)
         {
             Posecen[Ruter_OD] = true;                   // Oznaci da je tekuci ruter posecen
             int broj_susednih = Veze[Ruter_OD].Count;   // Broj susednih cvorova cvoru Ruter_OD
@@ -15,7 +14,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
             while (sused_id < broj_susednih && !bPovezani)  // Za svaki susedni ruter tekuceg rutera
             {
                 int Ruter_Susedni = Veze[Ruter_OD][sused_id];   // Trenutni susedni ruter tekucek rutera
-                bPovezani = DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze); // 3. 
+                bPovezani = DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze); // 3. Rekurzivni poziv DFS (susedni, DO)
                 sused_id++;                             // Indeks sledeceg susednog cvora (rutera)
             }
         }
