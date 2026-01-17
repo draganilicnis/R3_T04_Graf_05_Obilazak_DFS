@@ -1,11 +1,5 @@
-// R3 T04 Graf 05 Obilazak: DFS: Usmereni graf:
-// https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/dostizni_cvorovi
-// https://app.diagrams.net/?title=R3_T04_Graf_05_Obilazak_DFS.drawio&lightbox=1&page-id=OvW9At-KTonu65IJHdt-&client=1
-// https://app.diagrams.net/#Hdraganilicnis%2FR3_T04_Graf_05_Obilazak_DFS%2Fmain%2FR3_T04_Graf_05_Obilazak_DFS.drawio#%7B%22pageId%22%3A%22OvW9At-KTonu65IJHdt-%22%7D
-
 using System;
 using System.Collections.Generic;
-
 class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
 {
     static void Main()
@@ -24,8 +18,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
         {
             string[] s = Console.ReadLine().Split();
             int Ruter_OD = int.Parse(s[0]);
-            int Ruter_DO = int.Parse(s[1]);
-            // Ruter_OD--; Ruter_DO--;         // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+            int Ruter_DO = int.Parse(s[1]);     // Ruter_OD--; Ruter_DO--;  // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
             Veze[Ruter_OD].Add(Ruter_DO);
         }
         return Veze;
@@ -38,8 +31,7 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
         {
             string[] s = Console.ReadLine().Split();
             int Ruter_Start = int.Parse(s[0]);
-            int Ruter_Cilj = int.Parse(s[1]);
-            // Ruter_Start--; Ruter_Cilj--;    // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+            int Ruter_Cilj = int.Parse(s[1]);   // Ruter_Start--; Ruter_Cilj--; // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
             bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze);
             Console.WriteLine((bDa_li_su_povezani_Ruteri_R1_i_R2) ? "da" : "ne");
         }
@@ -59,3 +51,8 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
         return false;
     }
 }
+
+// R3 T04 Graf 05 Obilazak: DFS: Usmereni graf:
+// https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/dostizni_cvorovi
+// https://app.diagrams.net/?title=R3_T04_Graf_05_Obilazak_DFS.drawio&lightbox=1&page-id=OvW9At-KTonu65IJHdt-&client=1
+// https://app.diagrams.net/#Hdraganilicnis%2FR3_T04_Graf_05_Obilazak_DFS%2Fmain%2FR3_T04_Graf_05_Obilazak_DFS.drawio#%7B%22pageId%22%3A%22OvW9At-KTonu65IJHdt-%22%7D
