@@ -9,13 +9,14 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
         Posecen[Ruter_OD] = true;                               // Oznaci da je tekuci ruter posecen
         int broj_susednih = Veze[Ruter_OD].Count;               // Broj susednih cvorova cvoru Ruter_OD
         int susedni_id = 0;                                     // Indeks prvog susednog cvora
-        while (susedni_id < broj_susednih)                      // Za svaki susedni ruter tekuceg rutera rekurzivni poziv 
+        bool bPovezani = false;                                 // Da li su povezani Ruter_OD i Ruter_DO : inicijalno (pre petlje) nisu
+        while (susedni_id < broj_susednih && !bPovezani)        // Za svaki susedni ruter tekuceg rutera rekurzivni poziv 
         {
             int Ruter_Susedni = Veze[Ruter_OD][susedni_id];
-            if (DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) return true;
+            if (DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze)) bPovezani = true; //return true;
             susedni_id++;
         }
-        return false;
+        return bPovezani;   // false;
     }
     static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
     {
