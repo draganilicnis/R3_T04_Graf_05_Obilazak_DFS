@@ -4,22 +4,19 @@ class R3_T04_Graf_05_DFS_000_Dostizni_cvorovi
 {
     static bool DFS(int Ruter_OD, int Ruter_DO, bool[] Posecen, List<int>[] Veze)
     {
-        bool bPovezani = false;                                 // Da li su povezani Ruter_OD i Ruter_DO : inicijalno (pre petlje) nisu
-        if (Ruter_OD == Ruter_DO) bPovezani = true;             // Stigli smo do ciljnog rutera
-        else
+        bool bPovezani = false;                         // 0. Da li su povezani Ruter_OD i Ruter_DO : inicijalno (pre petlje) nisu
+        if (Ruter_OD == Ruter_DO) bPovezani = true;     // 1. Stigli smo do ciljnog rutera
+        else if(Posecen[Ruter_OD]) bPovezani = false;   // 2. Ako je tekuci ruter vec ranije bio posecen
+        else 
         {
-            if (Posecen[Ruter_OD]) bPovezani = false;               // Ako je tekuci ruter vec ranije bio posecen
-            else
+            Posecen[Ruter_OD] = true;                   // Oznaci da je tekuci ruter posecen
+            int broj_susednih = Veze[Ruter_OD].Count;   // Broj susednih cvorova cvoru Ruter_OD
+            int sused_id = 0;                           // Indeks prvog susednog cvora (rutera)
+            while (sused_id < broj_susednih && !bPovezani)  // Za svaki susedni ruter tekuceg rutera
             {
-                Posecen[Ruter_OD] = true;                               // Oznaci da je tekuci ruter posecen
-                int broj_susednih = Veze[Ruter_OD].Count;               // Broj susednih cvorova cvoru Ruter_OD
-                int susedni_id = 0;                                     // Indeks prvog susednog cvora
-                while (susedni_id < broj_susednih && !bPovezani)        // Za svaki susedni ruter tekuceg rutera rekurzivni poziv 
-                {
-                    int Ruter_Susedni = Veze[Ruter_OD][susedni_id];
-                    bPovezani = DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze); // bPovezani = true; //return true;
-                    susedni_id++;
-                }
+                int Ruter_Susedni = Veze[Ruter_OD][sused_id];   // Trenutni susedni ruter tekucek rutera
+                bPovezani = DFS(Ruter_Susedni, Ruter_DO, Posecen, Veze); // 3. 
+                sused_id++;                             // Indeks sledeceg susednog cvora (rutera)
             }
         }
         return bPovezani;   // false;
