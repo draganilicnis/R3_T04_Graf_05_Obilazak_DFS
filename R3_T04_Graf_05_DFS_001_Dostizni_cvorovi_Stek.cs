@@ -25,12 +25,12 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
 
     static bool DFS_Stek(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
     {
-        bool bPovezani = (Cvor_OD == Cvor_DO);      // 0. Da li smo sigli smo do ciljnog cvora, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
         // int N_broj_Cvorova = Veze.Length;
-        // bool[] Posecen = new bool[N_broj_Cvorova];
-        var Magacin = new Stack<int>();             // 0. Magacin (Stack)
-        Magacin.Push(Cvor_OD);                      // 1. Dodaj pocetni cvor u kolekciju (magacin)
-        Posecen[Cvor_OD] = true;
+        // bool[] Posecen = new bool[N_broj_Cvorova];   // Ne mora da se prenosi bool[] Posecen kao 4. parametar (argument)
+        bool bPovezani = (Cvor_OD == Cvor_DO);          // 0. Da li smo sigli smo do ciljnog cvora, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        var Magacin = new Stack<int>();                 // 0. Magacin (Stack)
+        Magacin.Push(Cvor_OD);                          // 1. Dodaj pocetni cvor u kolekciju (magacin)
+        Posecen[Cvor_OD] = true;                        // 1. Zapamti da si dodao pocetni cvor u kolekciju (magacin)
 
         while (!bPovezani && Magacin.Count > 0)     // 2. Dok kolekcija (magacin) nije prazna
         {
@@ -40,13 +40,41 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
                 if (Cvor_Sused == Cvor_DO)
                 {
                     bPovezani = true;
-                    break;
+                    break;                                  // Ovde izlazi iz petlje foreach (testiraj za 1 i 2, ne ispituje sused 3)
                 }
                 if (!Posecen[Cvor_Sused])                   // 4. Ako cvor nije oznacen
                 {
                     Posecen[Cvor_Sused] = true;             // 5. Oznaci cvor
                     Magacin.Push(Cvor_Sused);               // 6. Ubaci cvor u kolekciju
                 }
+            }
+        }
+        return bPovezani;   // Vraca vrednost da li su povezani cvorovi Cvor_OD i Cvor_DO
+    }
+    static bool DFS_Stek_v2(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
+    {
+        // int N_broj_Cvorova = Veze.Length;
+        // bool[] Posecen = new bool[N_broj_Cvorova];   // Ne mora da se prenosi bool[] Posecen kao 4. parametar (argument)
+        bool bPovezani = (Cvor_OD == Cvor_DO);          // 0. Da li smo sigli smo do ciljnog cvora, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        var Magacin = new Stack<int>();                 // 0. Magacin (Stack)
+        Magacin.Push(Cvor_OD);                          // 1. Dodaj pocetni cvor u kolekciju (magacin)
+        Posecen[Cvor_OD] = true;
+
+        while (!bPovezani && Magacin.Count > 0)         // 2. Dok kolekcija (magacin) nije prazna
+        {
+            int Cvor_OD_Pop = Magacin.Pop();                // 3. Uzmi cvor iz kolekcije
+            int cvorID = 0;
+            int broj_veza = Veze[Cvor_OD_Pop].Count;
+            while (cvorID < broj_veza && !bPovezani)
+            {
+                var Cvor_Sused = Veze[Cvor_OD_Pop][cvorID];
+                bPovezani = (Cvor_Sused == Cvor_DO);
+                if (!bPovezani && !Posecen[Cvor_Sused])     // 4. Ako cvor nije oznacen
+                {
+                    Posecen[Cvor_Sused] = true;             // 5. Oznaci cvor
+                    Magacin.Push(Cvor_Sused);               // 6. Ubaci cvor u kolekciju
+                }
+                cvorID++;
             }
         }
         return bPovezani;   // Vraca vrednost da li su povezani cvorovi Cvor_OD i Cvor_DO
@@ -58,11 +86,12 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
         bool[] Posecen = new bool[N_broj_Cvorova];                  // Za svaki cvor F ili T da li je posecen:  bool Posecen[N]
         bool bCvorovi_Start_i_Cilj_su_povezani = false;             // Promenljiva u kojoj se cuva da li su dva konkretna cvora povezana
 
-        DFS_Verzija = 1;            // Testiranje razlicitih verzija DFS metoda. U ovoj liniji koda rucno menjamo 0 ili 1.
+        DFS_Verzija = 2;            // Testiranje razlicitih verzija DFS metoda. U ovoj liniji koda rucno menjamo 0 ili 1.
         switch (DFS_Verzija)        // Testiranje razlicitih verzija DFS metoda
         {
             case 0: bCvorovi_Start_i_Cilj_su_povezani = DFS_Rekz(Cvor_Start, Cvor_Cilj, Veze, Posecen); break;  // DFS rekurzivno
             case 1: bCvorovi_Start_i_Cilj_su_povezani = DFS_Stek(Cvor_Start, Cvor_Cilj, Veze, Posecen); break;  // DFS koriscenjem steka umesto rekurzije
+            case 2: bCvorovi_Start_i_Cilj_su_povezani = DFS_Stek_v2(Cvor_Start, Cvor_Cilj, Veze, Posecen); break;  // DFS koriscenjem steka umesto rekurzije
         }
         return bCvorovi_Start_i_Cilj_su_povezani;
     }
