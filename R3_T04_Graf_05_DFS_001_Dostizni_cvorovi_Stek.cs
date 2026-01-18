@@ -4,17 +4,17 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
 {
     static bool DFS_Stek(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
     {
-        int broj_Rutera = Veze.Length;
-        // bool[] Posecen = new bool[broj_Rutera];
-        Stack<int> Ruteri = new Stack<int>();
-        Ruteri.Push(Cvor_OD);
+        int broj_Cvorova = Veze.Length;
+        // bool[] Posecen = new bool[broj_Cvorova];
+        var Magacin = new Stack<int>();
+        Magacin.Push(Cvor_OD);
         Posecen[Cvor_OD] = true;
-        bool bPovezani = false;
+        bool bPovezani = false;         // bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
 
-        while (Ruteri.Count > 0 && !bPovezani)
+        while (Magacin.Count > 0 && !bPovezani)
         {
-            int Cvor_Stek = Ruteri.Pop();
-            foreach (int Cvor_Sused in Veze[Cvor_Stek])
+            int Cvor_Pop = Magacin.Pop();
+            foreach (var Cvor_Sused in Veze[Cvor_Pop])
             {
                 if (Cvor_Sused == Cvor_DO)
                 {
@@ -24,13 +24,12 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
                 if (!Posecen[Cvor_Sused])
                 {
                     Posecen[Cvor_Sused] = true;
-                    Ruteri.Push(Cvor_Sused);
+                    Magacin.Push(Cvor_Sused);
                 }
             }
         }
 
-
-        //// bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        // bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
         //if (!bPovezani && !Posecen[Cvor_OD])    // 2. Ako tekuci cvor (ruter) OD nije posecen (i jos uvek nije povezan sa cvorom DO)
         //{
         //    Posecen[Cvor_OD] = true;                    // Oznaci da je tekuci cvor (ruter) posecen
@@ -66,7 +65,7 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
         for (int i = 0; i < broj_Veza; i++)
         {
             string[] s = Console.ReadLine().Split();
-            int Ruter_OD = int.Parse(s[0]);
+            int Ruter_OD = int.Parse(s[0]);     // Ruter_OD != Ruter_DO => Rueter_OD i Ruter_DO su obavezno razliciti iz teksta zadatka
             int Ruter_DO = int.Parse(s[1]);     // Ruter_OD--; Ruter_DO--;  // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
             Veze[Ruter_OD].Add(Ruter_DO);
         }
