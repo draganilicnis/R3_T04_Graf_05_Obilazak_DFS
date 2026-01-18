@@ -2,27 +2,54 @@ using System;
 using System.Collections.Generic;
 class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
 {
-    static bool DFS(int Cvor_OD, int Cvor_DO, bool[] Posecen, List<int>[] Veze)
+    static bool DFS_Stek(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
     {
-        bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
-        if (!bPovezani && !Posecen[Cvor_OD])    // 2. Ako tekuci cvor (ruter) OD nije posecen (i jos uvek nije povezan sa cvorom DO)
+        int broj_Rutera = Veze.Length;
+        // bool[] Posecen = new bool[broj_Rutera];
+        Stack<int> Ruteri = new Stack<int>();
+        Ruteri.Push(Cvor_OD);
+        Posecen[Cvor_OD] = true;
+        bool bPovezani = false;
+
+        while (Ruteri.Count > 0 && !bPovezani)
         {
-            Posecen[Cvor_OD] = true;                    // Oznaci da je tekuci cvor (ruter) posecen
-            int broj_susednih = Veze[Cvor_OD].Count;    // Broj susednih cvorova cvoru Cvor_OD
-            int sused_id = 0;                           // Indeks prvog susednog cvora (rutera)
-            while (sused_id < broj_susednih && !bPovezani)  // Za svaki susedni cvor (ruter) tekuceg cvora (rutera) 
+            int Cvor_Stek = Ruteri.Pop();
+            foreach (int Cvor_Sused in Veze[Cvor_Stek])
             {
-                int Cvor_Sused = Veze[Cvor_OD][sused_id];           // Trenutni susedni cvor (ruter) tekuceg cvora (rutera) Cvor_OD
-                bPovezani = DFS(Cvor_Sused, Cvor_DO, Posecen, Veze);// 3. Rekurzivni poziv DFS (susedni, DO)
-                sused_id++;                                         // Indeks sledeceg susednog cvora (rutera) cvoru Cvor_OD
+                if (Cvor_Sused == Cvor_DO)
+                {
+                    bPovezani = true;
+                    break;
+                }
+                if (!Posecen[Cvor_Sused])
+                {
+                    Posecen[Cvor_Sused] = true;
+                    Ruteri.Push(Cvor_Sused);
+                }
             }
         }
+
+
+        //// bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        //if (!bPovezani && !Posecen[Cvor_OD])    // 2. Ako tekuci cvor (ruter) OD nije posecen (i jos uvek nije povezan sa cvorom DO)
+        //{
+        //    Posecen[Cvor_OD] = true;                    // Oznaci da je tekuci cvor (ruter) posecen
+        //    int broj_susednih = Veze[Cvor_OD].Count;    // Broj susednih cvorova cvoru Cvor_OD
+        //    int sused_id = 0;                           // Indeks prvog susednog cvora (rutera)
+        //    while (sused_id < broj_susednih && !bPovezani)  // Za svaki susedni cvor (ruter) tekuceg cvora (rutera) 
+        //    {
+        //        int Cvor_Sused = Veze[Cvor_OD][sused_id];           // Trenutni susedni cvor (ruter) tekuceg cvora (rutera) Cvor_OD
+        //        bPovezani = DFS_Stek(Cvor_Sused, Cvor_DO, Veze, Posecen);// 3. Rekurzivni poziv DFS (susedni, DO)
+        //        sused_id++;                                         // Indeks sledeceg susednog cvora (rutera) cvoru Cvor_OD
+        //    }
+        //}
         return bPovezani;   // Vraca vrednost da li su povezani cvorovi Cvor_OD i Cvor_DO
     }
-    static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, int broj_Rutera, List<int>[] Veze)
+    static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, List<int>[] Veze, int broj_Rutera)
     {
+        // int broj_Rutera = Veze.Length;
         bool[] Posecen = new bool[broj_Rutera];
-        return DFS(Ruter_Start, Ruter_Cilj, Posecen, Veze);
+        return DFS_Stek(Ruter_Start, Ruter_Cilj, Veze, Posecen);
     }
     static void Main()
     {
@@ -54,7 +81,7 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
             string[] s = Console.ReadLine().Split();
             int Ruter_Start = int.Parse(s[0]);
             int Ruter_Cilj = int.Parse(s[1]);   // Ruter_Start--; Ruter_Cilj--; // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, broj_Rutera, Veze);
+            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, Veze, broj_Rutera);
             Console.WriteLine((bDa_li_su_povezani_Ruteri_R1_i_R2) ? "da" : "ne");
         }
     }
