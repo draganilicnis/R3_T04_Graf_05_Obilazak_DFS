@@ -2,85 +2,101 @@ using System;
 using System.Collections.Generic;
 class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
 {
+    static bool DFS_Rekz_Original(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
+    {
+        if (Cvor_OD == Cvor_DO) return true;        // 1. Da li smo sigli smo do ciljnog cvora, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        if (Posecen[Cvor_OD]) return false;         // 2. Ako tekuci cvor OD nije posecen (i jos uvek nije povezan sa cvorom DO)
+        Posecen[Cvor_OD] = true;                    // 3. Oznaci da je tekuci cvor (ruter) posecen
+        foreach (var Cvor_Susedni in Veze[Cvor_OD]) // 4. Za svaki susedni cvor tekuceg cvora rekurzivni poziv
+            if (DFS_Rekz(Cvor_Susedni, Cvor_DO, Veze, Posecen)) return true;
+        return false;
+    }
+    static bool DFS_Rekz(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
+    {
+        bool bPovezani = (Cvor_OD == Cvor_DO);      // 1. Da li smo sigli smo do ciljnog cvora, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        if (!bPovezani && !Posecen[Cvor_OD])        // 2. Ako tekuci cvor OD nije posecen (i jos uvek nije povezan sa cvorom DO)
+        {
+            Posecen[Cvor_OD] = true;                // 3. Oznaci da je tekuci cvor (ruter) posecen
+            foreach (var Cvor_Susedni in Veze[Cvor_OD])     // 4. Za svaki susedni cvor tekuceg cvora rekurzivni poziv
+                if (DFS_Rekz(Cvor_Susedni, Cvor_DO, Veze, Posecen)) return true;
+        }
+        return bPovezani;   // Vraca vrednost da li su povezani cvorovi Cvor_OD i Cvor_DO
+    }
+
     static bool DFS_Stek(int Cvor_OD, int Cvor_DO, List<int>[] Veze, bool[] Posecen)
     {
-        int broj_Cvorova = Veze.Length;
-        // bool[] Posecen = new bool[broj_Cvorova];
-        var Magacin = new Stack<int>();
-        Magacin.Push(Cvor_OD);
+        bool bPovezani = (Cvor_OD == Cvor_DO);      // 0. Da li smo sigli smo do ciljnog cvora, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        // int N_broj_Cvorova = Veze.Length;
+        // bool[] Posecen = new bool[N_broj_Cvorova];
+        var Magacin = new Stack<int>();             // 0. Magacin (Stack)
+        Magacin.Push(Cvor_OD);                      // 1. Dodaj pocetni cvor u kolekciju (magacin)
         Posecen[Cvor_OD] = true;
-        bool bPovezani = (Cvor_OD == Cvor_DO);      // bool bPovezani = false;  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
 
-        while (!bPovezani && Magacin.Count > 0)
+        while (!bPovezani && Magacin.Count > 0)     // 2. Dok kolekcija (magacin) nije prazna
         {
-            int Cvor_Pop = Magacin.Pop();
-            foreach (var Cvor_Sused in Veze[Cvor_Pop])
+            int Cvor_OD_Pop = Magacin.Pop();                // 3. Uzmi cvor iz kolekcije
+            foreach (var Cvor_Sused in Veze[Cvor_OD_Pop])
             {
                 if (Cvor_Sused == Cvor_DO)
                 {
                     bPovezani = true;
                     break;
                 }
-                if (!Posecen[Cvor_Sused])
+                if (!Posecen[Cvor_Sused])                   // 4. Ako cvor nije oznacen
                 {
-                    Posecen[Cvor_Sused] = true;
-                    Magacin.Push(Cvor_Sused);
+                    Posecen[Cvor_Sused] = true;             // 5. Oznaci cvor
+                    Magacin.Push(Cvor_Sused);               // 6. Ubaci cvor u kolekciju
                 }
             }
         }
-
-        // bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
-        //if (!bPovezani && !Posecen[Cvor_OD])    // 2. Ako tekuci cvor (ruter) OD nije posecen (i jos uvek nije povezan sa cvorom DO)
-        //{
-        //    Posecen[Cvor_OD] = true;                    // Oznaci da je tekuci cvor (ruter) posecen
-        //    int broj_susednih = Veze[Cvor_OD].Count;    // Broj susednih cvorova cvoru Cvor_OD
-        //    int sused_id = 0;                           // Indeks prvog susednog cvora (rutera)
-        //    while (sused_id < broj_susednih && !bPovezani)  // Za svaki susedni cvor (ruter) tekuceg cvora (rutera) 
-        //    {
-        //        int Cvor_Sused = Veze[Cvor_OD][sused_id];           // Trenutni susedni cvor (ruter) tekuceg cvora (rutera) Cvor_OD
-        //        bPovezani = DFS_Stek(Cvor_Sused, Cvor_DO, Veze, Posecen);// 3. Rekurzivni poziv DFS (susedni, DO)
-        //        sused_id++;                                         // Indeks sledeceg susednog cvora (rutera) cvoru Cvor_OD
-        //    }
-        //}
         return bPovezani;   // Vraca vrednost da li su povezani cvorovi Cvor_OD i Cvor_DO
     }
-    static bool Korak_03_Ruteri_R12_Povezani(int Ruter_Start, int Ruter_Cilj, List<int>[] Veze, int broj_Rutera)
+
+    static bool Korak_03_Cvorovi_R12_Povezani(int Cvor_Start, int Cvor_Cilj, List<int>[] Veze, int DFS_Verzija = 0)
     {
-        // int broj_Rutera = Veze.Length;
-        bool[] Posecen = new bool[broj_Rutera];
-        return DFS_Stek(Ruter_Start, Ruter_Cilj, Veze, Posecen);
+        int N_broj_Cvorova = Veze.Length;                           // Ukupan broj cvorova: zbog dimenzije niza bool Posecen[N]
+        bool[] Posecen = new bool[N_broj_Cvorova];                  // Za svaki cvor F ili T da li je posecen:  bool Posecen[N]
+        bool bCvorovi_Start_i_Cilj_su_povezani = false;             // Promenljiva u kojoj se cuva da li su dva konkretna cvora povezana
+
+        DFS_Verzija = 1;            // Testiranje razlicitih verzija DFS metoda. U ovoj liniji koda rucno menjamo 0 ili 1.
+        switch (DFS_Verzija)        // Testiranje razlicitih verzija DFS metoda
+        {
+            case 0: bCvorovi_Start_i_Cilj_su_povezani = DFS_Rekz(Cvor_Start, Cvor_Cilj, Veze, Posecen); break;  // DFS rekurzivno
+            case 1: bCvorovi_Start_i_Cilj_su_povezani = DFS_Stek(Cvor_Start, Cvor_Cilj, Veze, Posecen); break;  // DFS koriscenjem steka umesto rekurzije
+        }
+        return bCvorovi_Start_i_Cilj_su_povezani;
     }
+
     static void Main()
     {
-        List<int>[] Veze = Korak_01_Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj();  // Korak 1: ULAZ: Ucitavanje Grafa
-        Korak_02_Graf_Obrada_Test_Primera(Veze);                            // Korak 2: ULAZ: Ucitavanje test primera
+        List<int>[] Veze = Korak_01_Graf_Cvorovi_i_Veze_Niz_Listi_Ucitaj();     // Korak 1: ULAZ: Ucitavanje Grafa
+        Korak_02_Graf_Obrada_Test_Primera(Veze);                                // Korak 2: ULAZ: Ucitavanje test primera
     }
-    static List<int>[] Korak_01_Graf_Ruteri_i_Veze_Niz_Listi_Ucitaj()
+    static List<int>[] Korak_01_Graf_Cvorovi_i_Veze_Niz_Listi_Ucitaj()
     {
-        int broj_Rutera = int.Parse(Console.ReadLine());
-        List<int>[] Veze = new List<int>[broj_Rutera + 1];  // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-        for (int i = 0; i < broj_Rutera + 1; i++) Veze[i] = new List<int>();
+        int N_broj_Cvorova = int.Parse(Console.ReadLine());
+        var Veze = new List<int>[N_broj_Cvorova + 1];                   // + 1 -> Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+        for (int cvor = 0; cvor < N_broj_Cvorova + 1; cvor++) Veze[cvor] = new List<int>();
 
-        int broj_Veza = int.Parse(Console.ReadLine());
-        for (int i = 0; i < broj_Veza; i++)
+        int M_broj_Veza = int.Parse(Console.ReadLine());
+        for (int i = 0; i < M_broj_Veza; i++)
         {
             string[] s = Console.ReadLine().Split();
-            int Ruter_OD = int.Parse(s[0]);     // Ruter_OD != Ruter_DO => Rueter_OD i Ruter_DO su obavezno razliciti iz teksta zadatka
-            int Ruter_DO = int.Parse(s[1]);     // Ruter_OD--; Ruter_DO--;  // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-            Veze[Ruter_OD].Add(Ruter_DO);
+            int Cvor_OD = int.Parse(s[0]);          // Cvor_OD != Cvor_DO => Cvor_OD i Cvor_DO su obavezno razliciti iz teksta zadatka
+            int Cvor_DO = int.Parse(s[1]);          // Cvor_OD--; Cvor_DO--;  // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
+            Veze[Cvor_OD].Add(Cvor_DO);
         }
         return Veze;
     }
     static void Korak_02_Graf_Obrada_Test_Primera(List<int>[] Veze)
     {
-        int broj_Rutera = Veze.Length;
-        int broj_Parova = int.Parse(Console.ReadLine());
-        for (int i = 0; i < broj_Parova; i++)
+        int P_broj_Parova = int.Parse(Console.ReadLine());
+        for (int i = 0; i < P_broj_Parova; i++)
         {
             string[] s = Console.ReadLine().Split();
             int Ruter_Start = int.Parse(s[0]);
             int Ruter_Cilj = int.Parse(s[1]);   // Ruter_Start--; Ruter_Cilj--; // Zato sto brojevi rutera idu od 1, a ne od 0 u test primerima
-            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Ruteri_R12_Povezani(Ruter_Start, Ruter_Cilj, Veze, broj_Rutera);
+            bool bDa_li_su_povezani_Ruteri_R1_i_R2 = Korak_03_Cvorovi_R12_Povezani(Ruter_Start, Ruter_Cilj, Veze);
             Console.WriteLine((bDa_li_su_povezani_Ruteri_R1_i_R2) ? "da" : "ne");
         }
     }
