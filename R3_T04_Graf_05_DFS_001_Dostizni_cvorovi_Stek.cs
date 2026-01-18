@@ -65,7 +65,7 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
             int Cvor_OD_Pop = Magacin.Pop();                // 3. Uzmi cvor iz kolekcije
             int cvorID = 0;
             int broj_veza = Veze[Cvor_OD_Pop].Count;
-            while (cvorID < broj_veza && !bPovezani)
+            while (!bPovezani && cvorID < broj_veza)
             {
                 var Cvor_Sused = Veze[Cvor_OD_Pop][cvorID];
                 bPovezani = (Cvor_Sused == Cvor_DO);
