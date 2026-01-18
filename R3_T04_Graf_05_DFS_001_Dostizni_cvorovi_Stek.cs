@@ -9,9 +9,9 @@ class R3_T04_Graf_05_DFS_001_Dostizni_cvorovi_Stek
         var Magacin = new Stack<int>();
         Magacin.Push(Cvor_OD);
         Posecen[Cvor_OD] = true;
-        bool bPovezani = false;         // bool bPovezani = (Cvor_OD == Cvor_DO);  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
+        bool bPovezani = (Cvor_OD == Cvor_DO);      // bool bPovezani = false;  // 1. da li smo sigli smo do ciljnog rutera, ako jesmo onda je bPovezani = T i izlazimo, u suprotnom nastavljamo
 
-        while (Magacin.Count > 0 && !bPovezani)
+        while (!bPovezani && Magacin.Count > 0)
         {
             int Cvor_Pop = Magacin.Pop();
             foreach (var Cvor_Sused in Veze[Cvor_Pop])
