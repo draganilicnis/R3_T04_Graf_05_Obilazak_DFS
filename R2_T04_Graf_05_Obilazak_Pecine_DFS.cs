@@ -28,6 +28,7 @@ class R2_T04_Graf_05_Obilazak_DFS
             if (Nadmorska_Visina_Min > Cvor_DO_Visina_Min)      // Obratiti paznju da je tekst zadatka takav (kao i test primeri) da je:
                 Nadmorska_Visina_Min = Cvor_DO_Visina_Min;      // Svaki cvor (dvorana) na odredjenoj nadmorskoj visini (ne moze biti da je jedan cvor na dve razlicite NV)
         }                                                       // Te se zadatak moze resiti i na drugaciji nacin (bez listi, struktura, samo sa jos jednim novim nizom)
+        // Console.WriteLine(Cvor_OD + ": " + Nadmorska_Visina_Min);   // Testiranje: Provera medjurezultata
         return Nadmorska_Visina_Min;
     }
 
