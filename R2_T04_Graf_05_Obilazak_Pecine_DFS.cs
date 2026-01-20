@@ -24,10 +24,10 @@ class R2_T04_Graf_05_Obilazak_DFS
         foreach (Veza Cvor_OD_Veza in Veze[Cvor_OD])            // Za svaku Vezu (hodnih) od Cvora_OD
         {
             int Cvor_DO_Visina_Pom = Cvor_OD_Visina + Cvor_OD_Veza.Cvor_RV;                                 // Pomocna promenljiva = nadmorska visina za Cvor_DO
-            int Cvor_DO_Visina_Min = DFS_Visina_Min(Cvor_OD_Veza.Cvor_DO, Cvor_DO_Visina_Pom, Veze);        // DFS 
-            if (Nadmorska_Visina_Min > Cvor_DO_Visina_Min)
-                Nadmorska_Visina_Min = Cvor_DO_Visina_Min;
-        }
+            int Cvor_DO_Visina_Min = DFS_Visina_Min(Cvor_OD_Veza.Cvor_DO, Cvor_DO_Visina_Pom, Veze);        // DFS trazi Min najmanju nadmorsku visinu, odnosno takav cvor
+            if (Nadmorska_Visina_Min > Cvor_DO_Visina_Min)      // Obratiti paznju da je tekst zadatka takav (kao i test primeri) da je:
+                Nadmorska_Visina_Min = Cvor_DO_Visina_Min;      // Svaki cvor (dvorana) na odredjenoj nadmorskoj visini (ne moze biti da je jedan cvor na dve razlicite NV)
+        }                                                       // Te se zadatak moze resiti i na drugaciji nacin (bez listi, struktura, samo sa jos jednim novim nizom)
         return Nadmorska_Visina_Min;
     }
 
