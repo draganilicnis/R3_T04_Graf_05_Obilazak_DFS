@@ -1,5 +1,6 @@
 // https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/pecine
 // https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/pecine_sa_tunelima
+// https://arena.petlja.org/sr-Latn-RS/competition/r3-t04-05-pecine#tab_133456
 // DFS
 
 using System;
@@ -37,9 +38,9 @@ class R2_T04_Graf_05_Obilazak_DFS_Pecine
     {
         // Korak 1.0: ULAZ: 2 broja: Pocetna nadmorska visina tla i broj cvorova (dvorana)
         int VT_Nadmorska_visina_tla = int.Parse(Console.ReadLine());    // Visina tla: Pocetna nadmorska visina tla
-        int N = int.Parse(Console.ReadLine());                          // N: Broj cvorova (dvorana):  1 <= N <= 100
-        // int V = int.Parse(Console.ReadLine());                       // V: Broj veza
-        int V = N - 1;                                                  // V: Broj veza je N - 1 iz teksta zadatka
+        int N = int.Parse(Console.ReadLine());                          // N: Broj cvorova (dvorana)    :  1 <= N <= 100
+        int V = int.Parse(Console.ReadLine());                          // V: Broj veza                 :  1 <= V <= N * (N - 1) / 2
+        // int V = N - 1;                                                  // V: Broj veza je N - 1 iz teksta zadatka
 
         // Korak 1.1: Veze[N]: Niz listi Veza: prazne 
         List<Veza>[] Veze = new List<Veza>[N];                          // Niz Veza (Hodnik-a)
