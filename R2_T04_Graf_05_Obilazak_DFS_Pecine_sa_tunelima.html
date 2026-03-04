@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>Pećine - DFS</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        width: 420px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    textarea {
+        resize: vertical;
+        height: 90px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #45a049;
+    }
+
+    .result {
+        margin-top: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        color: #333;
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Pećine - DFS</h2>
+
+    <label>Početna nadmorska visina tla:</label>
+    <input type="number" id="visina">
+
+    <label>Broj čvorova (N):</label>
+    <input type="number" id="n">
+
+    <label>Unesite veze (svaki red: Cvor_OD Cvor_DO Razlika_visina):</label>
+    <textarea id="veze" placeholder="Primer:
+0 1 10
+1 2 -5"></textarea>
+
+    <button onclick="izracunaj()">Izračunaj</button>
+
+    <div class="result" id="rezultat"></div>
+</div>
+
+<script>
+function DFS_Visina_Min(Cvor_OD, Cvor_OD_Visina, Veze) {
+    let minVisina = Cvor_OD_Visina;
+
+    for (const veza of Veze[Cvor_OD]) {
+        const novaVisina = Cvor_OD_Visina + veza.Cvor_RV;
+        const minIzPodstabla = DFS_Visina_Min(
+            veza.Cvor_DO,
+            novaVisina,
+            Veze
+        );
+
+        if (minVisina > minIzPodstabla) {
+            minVisina = minIzPodstabla;
+        }
+    }
+
+    return minVisina;
+}
+
+function izracunaj() {
+    const pocetnaVisina = parseInt(document.getElementById("visina").value);
+    const N = parseInt(document.getElementById("n").value);
+    const vezeText = document.getElementById("veze").value.trim();
+
+    const Veze = Array.from({ length: N }, () => []);
+
+    if (vezeText.length > 0) {
+        const linije = vezeText.split("\n");
+
+        for (let linija of linije) {
+            const [Cvor_OD, Cvor_DO, Cvor_RV] = linija.trim().split(" ").map(Number);
+            Veze[Cvor_OD].push({
+                Cvor_DO: Cvor_DO,
+                Cvor_RV: Cvor_RV
+            });
+
+            // Ako je neusmeren graf:
+            // Veze[Cvor_DO].push({
+            //     Cvor_DO: Cvor_OD,
+            //     Cvor_RV: -Cvor_RV
+            // });
+        }
+    }
+
+    const rezultat = DFS_Visina_Min(0, pocetnaVisina, Veze);
+
+    document.getElementById("rezultat").innerText =
+        "Najniža nadmorska visina je: " + rezultat;
+}
+</script>
+
+</body>
+</html>
