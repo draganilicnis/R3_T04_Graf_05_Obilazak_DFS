@@ -14,10 +14,10 @@ class R2_T04_Graf_05_Obilazak_DFS_Pecine
     {
         public int Cvor_DO;                     // Do kod cvora (dvorane) vodi veza (hodnik)
         public int Cvor_RV;                     // Razlika visina izmedju Cvora_OD i Cvora_DO u toj vezi (hodniku)
-        public Veza(int Cvor_DO, int Cvor_RV)   // Konstruktor strukture Veza: Poziva se kada se u programu pozove naredba: new Veza(Cvor_DO, Cvor_RV)
+        public Veza(int Cvor_B, int Cvor_V)     // Konstruktor strukture Veza: Poziva se kada se u programu pozove naredba: new Veza(Cvor_DO, Cvor_RV)
         {                                       // Konstruktor strukture mora da ima isto ime (Veza) kao i sam struktura (Veza)
-            this.Cvor_DO = Cvor_DO;             // this.Cvor_DO ukazuje na polje Veza.Cvor_DO koje dobija vrednost iz 1. argumenta metode konstruktora (Cvor_DO)
-            this.Cvor_RV = Cvor_RV;             // this.Cvor_OD ukazuje na polje Veza.Cvor_OD koje dobija vrednost iz 2. argumenta metode konstruktora (Cvor_OD)
+            this.Cvor_DO = Cvor_B;              // this.Cvor_DO ukazuje na polje Veza.Cvor_DO koje dobija vrednost iz 1. argumenta metode konstruktora (Cvor_DO)
+            this.Cvor_RV = Cvor_V;              // this.Cvor_OD ukazuje na polje Veza.Cvor_OD koje dobija vrednost iz 2. argumenta metode konstruktora (Cvor_OD)
         }
     }
 
@@ -41,7 +41,7 @@ class R2_T04_Graf_05_Obilazak_DFS_Pecine
         int VT_Nadmorska_visina_tla = int.Parse(Console.ReadLine());    // Visina tla: Pocetna nadmorska visina tla
         int N = int.Parse(Console.ReadLine());                          // N: Broj cvorova (dvorana)    :  1 <= N <= 100
         int V = int.Parse(Console.ReadLine());                          // V: Broj veza                 :  1 <= V <= N * (N - 1) / 2
-        // int V = N - 1;                                                  // V: Broj veza je N - 1 iz teksta zadatka
+        // int V = N - 1;                                               // V: Broj veza je N - 1 iz teksta zadatka (za prethodni zadatak Pecine, kada je V = N - 1)
 
         // Korak 1.1: Veze[N]: Niz listi Veza: prazne 
         List<Veza>[] Veze = new List<Veza>[N];                          // Niz Veza (Hodnik-a)
@@ -58,7 +58,7 @@ class R2_T04_Graf_05_Obilazak_DFS_Pecine
             // Veze[Cvor_DO].Add(new Veza(Cvor_OD, -Cvor_RV));          // Dodaje se nova Veza za Cvor_DO do Cvor_OD sa negativnom Razlikom visine, SAMO ako je NEUSMER graf
         }
 
-        // Korak 2: DFS -->> DFS (0, Posetna_nadmorska_visina_tla, Veze)                                // Pocetak: Cvor = 0, Visina_Tla, Niz listi Veze (hodnika)
+        // Korak 2: DFS -->> DFS (0, Pocetna_nadmorska_visina_tla, Veze)                                // Pocetak: Cvor = 0, Visina_Tla, Niz listi Veze (hodnika)
         int VT_Nadmorska_visina_Najniza_Rezultat = DFS_Visina_Min(0, VT_Nadmorska_visina_tla, Veze);    // Pocetak: Cvor = 0, Visina_Tla, Niz listi Veze (hodnika)
 
         // Korak 3: Izlaz
