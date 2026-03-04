@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>Pećine - DFS Vizuelizacija</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.panel {
+    width: 350px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+canvas {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+input, textarea {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 6px;
+}
+
+button {
+    width: 100%;
+    padding: 8px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+.result {
+    margin-top: 10px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="panel">
+    <h3>Ulaz podataka</h3>
+
+    <label>Početna visina:</label>
+    <input type="number" id="visina">
+
+    <label>Broj čvorova (N):</label>
+    <input type="number" id="n">
+
+    <label>Veze (Cvor_OD Cvor_DO Razlika):</label>
+    <textarea id="veze" rows="6" placeholder="0 1 10
+1 2 -5"></textarea>
+
+    <button onclick="pokreni()">Izračunaj i nacrtaj</button>
+
+    <div class="result" id="rezultat"></div>
+</div>
+
+<canvas id="graf" width="700" height="600"></canvas>
+
+<script>
+function DFS_Visina_Min(cvor, visina, veze) {
+    let min = visina;
+    for (const v of veze[cvor]) {
+        const nova = visina + v.rv;
+        const podMin = DFS_Visina_Min(v.do, nova, veze);
+        if (podMin < min) min = podMin;
+    }
+    return min;
+}
+
+function pokreni() {
+    const pocetna = parseInt(document.getElementById("visina").value);
+    const N = parseInt(document.getElementById("n").value);
+    const tekst = document.getElementById("veze").value.trim();
+
+    const veze = Array.from({ length: N }, () => []);
+
+    const linije = tekst.split("\n");
+    for (let linija of linije) {
+        const [od, d, rv] = linija.trim().split(" ").map(Number);
+        veze[od].push({ do: d, rv: rv });
+    }
+
+    const rezultat = DFS_Visina_Min(0, pocetna, veze);
+    document.getElementById("rezultat").innerText =
+        "Najniža nadmorska visina: " + rezultat;
+
+    nacrtajGraf(N, linije);
+}
+
+function nacrtajGraf(N, linije) {
+    const canvas = document.getElementById("graf");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 220;
+
+    const pozicije = [];
+
+    // Raspored čvorova u krug
+    for (let i = 0; i < N; i++) {
+        const ugao = (2 * Math.PI * i) / N;
+        const x = centerX + radius * Math.cos(ugao);
+        const y = centerY + radius * Math.sin(ugao);
+        pozicije.push({ x, y });
+    }
+
+    ctx.font = "14px Arial";
+
+    // Crtanje grana
+    for (let linija of linije) {
+        const [od, d, rv] = linija.trim().split(" ").map(Number);
+        const p1 = pozicije[od];
+        const p2 = pozicije[d];
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+
+        // Ispis težine
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        ctx.fillText(rv, midX, midY);
+    }
+
+    // Crtanje čvorova
+    for (let i = 0; i < N; i++) {
+        const p = pozicije[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 20, 0, 2 * Math.PI);
+        ctx.fillStyle = "#4CAF50";
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(i, p.x, p.y);
+    }
+}
+</script>
+
+</body>
+</html>
