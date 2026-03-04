@@ -1,10 +1,11 @@
 // https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/pecine
+// https://petlja.org/sr-Latn-RS/biblioteka/r/Zbirka3/pecine_sa_tunelima
 // DFS
 
 using System;
 using System.Collections.Generic;
 
-class R2_T04_Graf_05_Obilazak_DFS
+class R2_T04_Graf_05_Obilazak_DFS_Pecine
 {
 
     struct Veza                                 // Veza (Hodnik) izmedju dva cvora (dvorane)
@@ -36,7 +37,7 @@ class R2_T04_Graf_05_Obilazak_DFS
     {
         // Korak 1.0: ULAZ: 2 broja: Pocetna nadmorska visina tla i broj cvorova (dvorana)
         int VT_Nadmorska_visina_tla = int.Parse(Console.ReadLine());    // Visina tla: Pocetna nadmorska visina tla
-        int N = int.Parse(Console.ReadLine());                          // N: Broj cvorova (dvorana)
+        int N = int.Parse(Console.ReadLine());                          // N: Broj cvorova (dvorana):  1 <= N <= 100
         // int V = int.Parse(Console.ReadLine());                       // V: Broj veza
         int V = N - 1;                                                  // V: Broj veza je N - 1 iz teksta zadatka
 
@@ -59,6 +60,6 @@ class R2_T04_Graf_05_Obilazak_DFS
         int VT_Nadmorska_visina_Najniza_Rezultat = DFS_Visina_Min(0, VT_Nadmorska_visina_tla, Veze);    // Pocetak: Cvor = 0, Visina_Tla, Niz listi Veze (hodnika)
 
         // Korak 3: Izlaz
-        Console.WriteLine(VT_Nadmorska_visina_Najniza_Rezultat);    
+        Console.WriteLine(VT_Nadmorska_visina_Najniza_Rezultat);
     }
 }
