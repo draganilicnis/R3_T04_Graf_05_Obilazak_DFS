@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>DFS / BFS Edu Vizuelizacija</title>
+<style>
+body { font-family: Arial; background:#eef1f5; display:flex; gap:20px; padding:20px; }
+.panel { width:360px; background:white; padding:20px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+canvas { background:white; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+textarea,input,select{width:100%;margin-bottom:8px;padding:6px;}
+button{width:100%;padding:8px;margin-bottom:5px;background:#4CAF50;color:white;border:none;border-radius:6px;cursor:pointer;}
+button:hover{background:#45a049;}
+.sidebox{background:#fafafa;padding:8px;border-radius:8px;margin-top:8px;font-size:14px;}
+.warning{color:red;font-weight:bold;}
+</style>
+</head>
+<body>
+
+<div class="panel">
+<h3>Algoritamska Vizuelizacija</h3>
+
+<label>Početna visina:</label>
+<input type="number" id="visina" value="100">
+
+<label>Broj čvorova:</label>
+<input type="number" id="n" value="5">
+
+<label>Veze (OD DO Razlika):</label>
+<textarea id="veze" rows="6">0 1 10
+1 2 -5
+0 3 3
+3 4 2</textarea>
+
+<label>Algoritam:</label>
+<select id="algoritam">
+<option value="DFS">DFS</option>
+<option value="BFS">BFS</option>
+</select>
+
+<button onclick="inicijalizuj()">Pripremi</button>
+<button onclick="korak()">Step</button>
+<button onclick="autoPlay()">Auto</button>
+
+<div class="sidebox">
+<b>Stek / Red:</b>
+<div id="struktura"></div>
+</div>
+
+<div class="sidebox">
+<b>Rekurzivno stablo:</b>
+<div id="stablo"></div>
+</div>
+
+<div id="upozorenje" class="warning"></div>
+
+</div>
+
+<canvas id="graf" width="750" height="600"></canvas>
+
+<script>
+let ctx,pozicije=[],veze=[],N=0;
+let visited=[],visine=[],koraci=[];
+let strukturaData=[];
+let parent=[];
+let pocetniCvor=0;
+
+function inicijalizuj(){
+    N=parseInt(document.getElementById("n").value);
+    const tekst=document.getElementById("veze").value.trim().split("\n");
+    const pocetna=parseInt(document.getElementById("visina").value);
+
+    veze=Array.from({length:N},()=>[]);
+    visited=Array(N).fill(false);
+    visine=Array(N).fill(null);
+    parent=Array(N).fill(null);
+    koraci=[];
+    strukturaData=[];
+
+    for(let linija of tekst){
+        const [od,d,rv]=linija.trim().split(" ").map(Number);
+        veze[od].push({do:d,rv:rv});
+    }
+
+    if(detektujCiklus()){
+        document.getElementById("upozorenje").innerText="⚠ Graf sadrži ciklus!";
+    }else{
+        document.getElementById("upozorenje").innerText="";
+    }
+
+    pripremiKorake(pocetna);
+    nacrtajGraf();
+    prikaziStrukturu();
+    prikaziStablo();
+}
+
+function detektujCiklus(){
+    let temp=Array(N).fill(false);
+    let perm=Array(N).fill(false);
+
+    function dfs(v){
+        if(perm[v]) return false;
+        if(temp[v]) return true;
+        temp[v]=true;
+        for(let e of veze[v]){
+            if(dfs(e.do)) return true;
+        }
+        temp[v]=false;
+        perm[v]=true;
+        return false;
+    }
+
+    for(let i=0;i<N;i++){
+        if(dfs(i)) return true;
+    }
+    return false;
+}
+
+function pripremiKorake(pocetna){
+    const alg=document.getElementById("algoritam").value;
+
+    if(alg==="DFS"){
+        function dfs(cvor,visina){
+            visited[cvor]=true;
+            visine[cvor]=visina;
+            koraci.push({tip:"node",cvor});
+            strukturaData.push([...strukturaData,cvor]);
+            for(let v of veze[cvor]){
+                if(!visited[v.do]){
+                    parent[v.do]=cvor;
+                    koraci.push({tip:"edge",od:cvor,do:v.do});
+                    dfs(v.do,visina+v.rv);
+                }
+            }
+        }
+        dfs(pocetniCvor,pocetna);
+    }else{
+        let q=[pocetniCvor];
+        visited[pocetniCvor]=true;
+        visine[pocetniCvor]=pocetna;
+
+        while(q.length){
+            let c=q.shift();
+            koraci.push({tip:"node",cvor:c});
+            strukturaData.push([...q]);
+            for(let v of veze[c]){
+                if(!visited[v.do]){
+                    visited[v.do]=true;
+                    visine[v.do]=visine[c]+v.rv;
+                    parent[v.do]=c;
+                    koraci.push({tip:"edge",od:c,do:v.do});
+                    q.push(v.do);
+                }
+            }
+        }
+    }
+
+    visited.fill(false);
+}
+
+function korak(){
+    if(!koraci.length) return;
+    let k=koraci.shift();
+
+    if(k.tip==="node"){
+        obojiCvor(k.cvor,"orange");
+        visited[k.cvor]=true;
+    }else{
+        obojiIvicu(k.od,k.do,"red");
+    }
+
+    prikaziStrukturu();
+    prikaziStablo();
+}
+
+async function autoPlay(){
+    while(koraci.length){
+        korak();
+        await new Promise(r=>setTimeout(r,700));
+    }
+}
+
+function prikaziStrukturu(){
+    document.getElementById("struktura").innerText=
+        JSON.stringify(strukturaData.slice(-1)[0]||[]);
+}
+
+function prikaziStablo(){
+    let tekst="";
+    for(let i=0;i<N;i++){
+        if(parent[i]!=null)
+            tekst+=parent[i]+" → "+i+"\n";
+    }
+    document.getElementById("stablo").innerText=tekst;
+}
+
+function nacrtajGraf(){
+    const canvas=document.getElementById("graf");
+    ctx=canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    pozicije=[];
+    let cx=canvas.width/2;
+    let cy=canvas.height/2;
+    let r=220;
+
+    for(let i=0;i<N;i++){
+        let angle=2*Math.PI*i/N;
+        pozicije.push({x:cx+r*Math.cos(angle),y:cy+r*Math.sin(angle)});
+    }
+
+    for(let i=0;i<N;i++)
+        for(let v of veze[i])
+            obojiIvicu(i,v.do,"black");
+
+    for(let i=0;i<N;i++)
+        obojiCvor(i,"#ccc");
+}
+
+function obojiCvor(i,boja){
+    let p=pozicije[i];
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,22,0,2*Math.PI);
+    ctx.fillStyle=boja;
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle="white";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.fillText(i,p.x,p.y);
+    if(visine[i]!=null){
+        ctx.fillStyle="black";
+        ctx.fillText(visine[i],p.x,p.y+35);
+    }
+}
+
+function obojiIvicu(a,b,boja){
+    let p1=pozicije[a],p2=pozicije[b];
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);
+    ctx.lineTo(p2.x,p2.y);
+    ctx.strokeStyle=boja;
+    ctx.lineWidth=3;
+    ctx.stroke();
+    ctx.strokeStyle="black";
+    ctx.lineWidth=1;
+}
+
+document.getElementById("graf").addEventListener("click",function(e){
+    let rect=this.getBoundingClientRect();
+    let x=e.clientX-rect.left;
+    let y=e.clientY-rect.top;
+
+    for(let i=0;i<N;i++){
+        let p=pozicije[i];
+        let dist=Math.hypot(x-p.x,y-p.y);
+        if(dist<22){
+            pocetniCvor=i;
+            alert("Početni čvor postavljen na: "+i);
+            return;
+        }
+    }
+});
+</script>
+
+</body>
+</html>
